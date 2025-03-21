@@ -66,16 +66,10 @@ class _SettingsState extends State<Settings> {
                 items: const [
                   DropdownMenuItem(
                     value: AppTheme.system,
-                    child: Text("System Theme"),
+                    child: Text("System"),
                   ),
-                  DropdownMenuItem(
-                    value: AppTheme.light,
-                    child: Text("Light Theme"),
-                  ),
-                  DropdownMenuItem(
-                    value: AppTheme.dark,
-                    child: Text("Dark Theme"),
-                  ),
+                  DropdownMenuItem(value: AppTheme.light, child: Text("Light")),
+                  DropdownMenuItem(value: AppTheme.dark, child: Text("Dark")),
                 ],
                 onChanged: (AppTheme? newTheme) {
                   if (newTheme != null) {

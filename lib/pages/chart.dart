@@ -35,7 +35,7 @@ class Chart extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               child: SizedBox(
                 width: max(7, amountList.length) * 55,
-                height: mediaQuery.height * 0.7,
+                height: mediaQuery.height * 0.6,
                 child: BarChart(
                   BarChartData(
                     extraLinesData: ExtraLinesData(

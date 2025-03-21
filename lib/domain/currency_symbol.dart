@@ -1,7 +1,7 @@
 List<Map<String, String>> currencySymbol = [
-  {"name": "US Dollar", "symbol": "\$"},
+  {"name": "Dollar", "symbol": "\$"},
   {"name": "Euro", "symbol": "€"},
-  {"name": "Indian Rupee", "symbol": "₹"},
+  {"name": "Rupee", "symbol": "₹"},
   {"name": "Pound", "symbol": "£"},
   {"name": "Yen", "symbol": "¥"},
   {"name": "Won", "symbol": "₩"},

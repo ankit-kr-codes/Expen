@@ -18,17 +18,24 @@ dependencies:
   url_launcher: ^6.3.1
   package_info_plus: ^8.3.0
   fl_chart: ^0.70.2
+  flutter_launcher_icons: ^0.14.3
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
+
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/icon.png"
   
 flutter:
   uses-material-design: true
 
-  # assets:
-  #   - assets/images/
+  assets:
+    - assets/images/
   #   - images/a_dot_ham.jpeg
 
 

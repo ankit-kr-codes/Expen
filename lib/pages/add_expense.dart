@@ -20,8 +20,9 @@ class _AddExpenseState extends State<AddExpense> {
   TextEditingController titleController = TextEditingController();
   TextEditingController subTitleController = TextEditingController();
 
-  final UnderlineInputBorder _border = UnderlineInputBorder(
-    borderSide: BorderSide(width: 2, color: AppColors.grey),
+  final OutlineInputBorder _outlineInputBorder = OutlineInputBorder(
+    borderRadius: BorderRadius.circular(30),
+    borderSide: BorderSide.none,
   );
 
   @override
@@ -49,36 +50,43 @@ class _AddExpenseState extends State<AddExpense> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            TextField(
-              controller: numController,
-              keyboardType: TextInputType.number,
-              autofocus: true,
-              decoration: InputDecoration(
-                labelText: "Enter Amount",
-                prefixIcon: BlocBuilder<CurrencyBloc, CurrencyState>(
-                  builder: (context, state) {
-                    return SizedBox(
-                      width: 0,
-                      child: Center(
-                        heightFactor: 0.2,
-                        child: Text(
-                          currencySymbol[state
-                                  .selectedCurrencyIndex]["symbol"] ??
-                              "",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: AppColors.darkGrey,
+            SizedBox(
+              width: 150,
+              child: TextField(
+                controller: numController,
+                keyboardType: TextInputType.number,
+                autofocus: true,
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: AppColors.lightTransparent,
+                  // labelText: "Enter Amount",
+                  hintText: "0.00",
+                  prefixIcon: BlocBuilder<CurrencyBloc, CurrencyState>(
+                    builder: (context, state) {
+                      return SizedBox(
+                        width: 0,
+                        child: Center(
+                          heightFactor: 0.2,
+                          child: Text(
+                            currencySymbol[state
+                                    .selectedCurrencyIndex]["symbol"] ??
+                                "",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: AppColors.darkGrey,
+                            ),
                           ),
                         ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
+                  prefixStyle: TextStyle(color: AppColors.grey),
+                  border: _outlineInputBorder,
+                  enabledBorder: _outlineInputBorder,
+                  focusedBorder: _outlineInputBorder,
+                  hoverColor: AppColors.transparent,
                 ),
-                prefixStyle: TextStyle(color: AppColors.grey),
-                border: _border,
-                enabledBorder: _border,
-                focusedBorder: _border,
               ),
             ),
             const SizedBox(height: 50),
@@ -87,29 +95,37 @@ class _AddExpenseState extends State<AddExpense> {
               child: Text("Expense Title"),
               //
             ),
+            const SizedBox(height: 10),
             TextField(
               controller: titleController,
               decoration: InputDecoration(
-                border: _border,
-                enabledBorder: _border,
-                focusedBorder: _border,
+                filled: true,
+                fillColor: AppColors.lightTransparent,
+                border: _outlineInputBorder,
+                enabledBorder: _outlineInputBorder,
+                focusedBorder: _outlineInputBorder,
+                hoverColor: AppColors.transparent,
               ),
             ),
-            const SizedBox(height: 50),
+            const SizedBox(height: 30),
             const Align(
               alignment: Alignment.centerLeft,
               child: Text("Expense Description"),
               //
             ),
+            const SizedBox(height: 10),
             TextField(
               controller: subTitleController,
               decoration: InputDecoration(
-                border: _border,
-                enabledBorder: _border,
-                focusedBorder: _border,
+                filled: true,
+                fillColor: AppColors.lightTransparent,
+                border: _outlineInputBorder,
+                enabledBorder: _outlineInputBorder,
+                focusedBorder: _outlineInputBorder,
+                hoverColor: AppColors.transparent,
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 40),
             ElevatedButton(
               onPressed: () {
                 if (numController.text.isNotEmpty) {
@@ -159,6 +175,10 @@ class _AddExpenseState extends State<AddExpense> {
                   );
                 }
               },
+              style: ButtonStyle(
+                elevation: const WidgetStatePropertyAll(0),
+                overlayColor: WidgetStatePropertyAll(AppColors.transparent),
+              ),
               child: const Text("Save Expense"),
             ),
           ],
