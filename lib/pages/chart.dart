@@ -30,7 +30,7 @@ class Chart extends StatelessWidget {
               "Spending Overview",
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 30),
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: SizedBox(
@@ -71,12 +71,16 @@ class Chart extends StatelessWidget {
                     barGroups: List.generate(
                       amountList.length,
                       (index) => BarChartGroupData(
+                        barsSpace: 20,
                         x: index,
                         barRods: [
                           BarChartRodData(
                             toY: amountList[index].amount!,
                             width: 20,
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(50),
+                              topRight: Radius.circular(50),
+                            ),
                             gradient: LinearGradient(
                               colors: AppColors().gradientColors,
                               begin: Alignment.bottomCenter,
@@ -110,7 +114,7 @@ class Chart extends StatelessWidget {
                           showTitles: true,
                           getTitlesWidget:
                               (value, meta) => Text(
-                                " Day ${value.toInt()} ",
+                                " ${value.toInt() + 1} ",
                                 style: const TextStyle(fontSize: 12),
                               ),
                         ),
@@ -127,7 +131,7 @@ class Chart extends StatelessWidget {
             BlocBuilder<CurrencyBloc, CurrencyState>(
               builder: (context, state) {
                 return Text(
-                  "Total spent: ${currencySymbol[state.selectedCurrencyIndex]["symbol"]}${totalAmount.toStringAsFixed(2)}",
+                  "Total Expenditure: ${currencySymbol[state.selectedCurrencyIndex]["symbol"]}${totalAmount.toStringAsFixed(2)}",
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -135,16 +139,19 @@ class Chart extends StatelessWidget {
                 );
               },
             ),
+            const SizedBox(height: 10),
             BlocBuilder<CurrencyBloc, CurrencyState>(
               builder: (context, state) {
                 return Text(
-                  "Limit: ${currencySymbol[state.selectedCurrencyIndex]["symbol"]}${rangeProvider.range}",
+                  "Target: ${currencySymbol[state.selectedCurrencyIndex]["symbol"]}${rangeProvider.range}",
                   style: TextStyle(
                     fontSize: 14,
                     color:
-                        rangeProvider.range < totalAmount
-                            ? Colors.red
-                            : Colors.green,
+                        rangeProvider.range == 0
+                            ? AppColors.darkGrey
+                            : rangeProvider.range < totalAmount
+                            ? AppColors.red
+                            : AppColors.green,
                   ),
                 );
               },

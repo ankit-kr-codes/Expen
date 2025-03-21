@@ -21,13 +21,14 @@ class AmountProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  List<Amount> get amounts => _amounts;
+  List<Amount> get amounts => _amounts.reversed.toList();
 
-  void addAmount(String title, double? amount) {
+  void addAmount(String title, String subtitle, double? amount) {
     _amounts.add(
       Amount(
         id: const Uuid().v4(),
         title: title,
+        subtitle: subtitle,
         amount: amount,
         //
       ),
@@ -37,6 +38,11 @@ class AmountProvider with ChangeNotifier {
 
   void deleteAmount(String id) {
     _amounts.removeWhere((amounts) => amounts.id == id);
+    notifyListeners();
+  }
+
+  void deleteAllExpenses() {
+    _amounts.clear();
     notifyListeners();
   }
 }

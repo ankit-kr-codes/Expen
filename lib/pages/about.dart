@@ -63,7 +63,7 @@ class About extends StatelessWidget {
                 redirectUrl("https://x.com/ankit_kr_codes");
               },
               title: const Text("Twitter"),
-              leading: const Icon(Icons.transfer_within_a_station_rounded),
+              leading: const Icon(Icons.person),
               subtitle: const Text("@ankit_kr_codes"),
             ),
             ListTile(
@@ -96,6 +96,21 @@ class About extends StatelessWidget {
               title: const Text("App Version"),
               subtitle: Text(context.watch<VersionProvider>().version),
               leading: const Icon(Icons.android),
+            ),
+            Text(
+              "Developers Section",
+              style: TextStyle(
+                color: AppColors.blue,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            ListTile(
+              onTap: () {
+                redirectUrl("https://github.com/ankit-kr-codes");
+              },
+              title: const Text("GitHub"),
+              leading: const Icon(Icons.code),
+              subtitle: const Text("ankit-kr-codes"),
             ),
           ],
         ),

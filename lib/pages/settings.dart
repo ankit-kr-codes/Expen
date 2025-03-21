@@ -44,7 +44,7 @@ class _SettingsState extends State<Settings> {
           children: [
             const SizedBox(height: 10),
             settingsList(
-              "Select Currency",
+              "Choose Currency",
               TextButton(
                 onPressed: () {
                   picker(context);
@@ -60,7 +60,7 @@ class _SettingsState extends State<Settings> {
               ),
             ),
             settingsList(
-              "Select Theme",
+              "Select App Theme ",
               DropdownButton<AppTheme>(
                 value: currentTheme,
                 items: const [
@@ -86,19 +86,19 @@ class _SettingsState extends State<Settings> {
             ),
 
             settingsList(
-              "Set Limit",
+              "Set Target",
               TextButton(
                 onPressed: () {
                   showDialog<String>(
                     context: context,
                     builder:
                         (BuildContext context) => AlertDialog(
-                          title: const Text('Set a Limit'),
+                          title: const Text('Set Expense Target'),
                           content: TextField(
                             controller: rangeController,
                             keyboardType: TextInputType.number,
                             decoration: InputDecoration(
-                              hintText: "Set Limit",
+                              hintText: "Enter your target",
                               prefixIcon: BlocBuilder<
                                 CurrencyBloc,
                                 CurrencyState
@@ -132,7 +132,7 @@ class _SettingsState extends State<Settings> {
                           ),
                           actions: <Widget>[
                             TextButton(
-                              onPressed: () => Navigator.pop(context, 'Cancel'),
+                              onPressed: () => context.pop(),
                               child: const Text('Cancel'),
                             ),
                             TextButton(
@@ -144,7 +144,7 @@ class _SettingsState extends State<Settings> {
                                   rangeProvider.setRange(limit);
                                   rangeController.clear();
                                 }
-                                Navigator.pop(context, 'OK');
+                                context.pop();
                               },
                               child: const Text('OK'),
                             ),
@@ -189,7 +189,7 @@ class _SettingsState extends State<Settings> {
   Future<String?> picker(BuildContext context) {
     return showMaterialScrollPicker<String>(
       context: context,
-      title: 'Pick Currency',
+      title: 'Select Your Currency',
       items:
           currencySymbol.map((e) => '${e["name"]} (${e["symbol"]})').toList(),
       selectedItem:

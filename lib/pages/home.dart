@@ -19,24 +19,72 @@ class Home extends StatelessWidget {
     double totalAmount = Provider.of<AmountProvider>(context).totalAmount;
 
     return Scaffold(
+      appBar: AppBar(
+        actions: [
+          PopupMenuButton<String>(
+            icon: const Icon(Icons.more_vert_rounded),
+            tooltip: "",
+            itemBuilder:
+                (context) => [
+                  PopupMenuItem(
+                    onTap: () {
+                      showDialog<String>(
+                        context: context,
+                        builder:
+                            (BuildContext context) => AlertDialog(
+                              title: const Text(
+                                'Are you sure you want to delete all your expenses?',
+                              ),
+                              content: const Text(
+                                "You won't be able to restore it later.",
+                              ),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () {
+                                    context.pop();
+                                  },
+                                  child: const Text('Cancel'),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    amountProvider.deleteAllExpenses();
+                                    context.pop();
+                                  },
+                                  child: Text(
+                                    'Delete',
+                                    style: TextStyle(color: AppColors.red),
+                                  ),
+                                ),
+                              ],
+                            ),
+                      );
+                    },
+                    child: const Text("Delete All Expenses"),
+                  ),
+                ],
+          ),
+          const SizedBox(width: 20),
+          //
+        ],
+      ),
       body: Column(
         children: [
           SizedBox(
-            height: mediaQuery.height * 0.3,
+            height: mediaQuery.height * 0.25,
             child: BlocBuilder<CurrencyBloc, CurrencyState>(
               builder: (context, state) {
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "${currencySymbol[state.selectedCurrencyIndex]["symbol"]} $totalAmount ",
+                      "${currencySymbol[state.selectedCurrencyIndex]["symbol"]}$totalAmount",
                       style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                     Text(
-                      "Spent in total",
+                      "Total Spent",
                       style: TextStyle(color: AppColors.darkGrey),
                     ),
                   ],
@@ -47,12 +95,44 @@ class Home extends StatelessWidget {
           Expanded(
             child: ListView.builder(
               itemCount: amountProvider.amounts.length,
-              reverse: true,
+              physics: const ClampingScrollPhysics(),
               itemBuilder: (BuildContext context, int index) {
                 var amount = amountProvider.amounts[index];
                 return Column(
                   children: [
                     ListTile(
+                      onLongPress: () {
+                        showDialog<String>(
+                          context: context,
+                          builder:
+                              (BuildContext context) => AlertDialog(
+                                title: const Text(
+                                  'Are you sure you want to delete this expense?',
+                                ),
+                                content: const Text(
+                                  "This action cannot be undone.",
+                                ),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () {
+                                      context.pop();
+                                    },
+                                    child: const Text('Cancel'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      amountProvider.deleteAmount(amount.id);
+                                      context.pop();
+                                    },
+                                    child: Text(
+                                      'Delete',
+                                      style: TextStyle(color: AppColors.red),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                        );
+                      },
                       title: Text(
                         amount.title.isEmpty ? "Random" : amount.title,
                       ),
@@ -64,8 +144,11 @@ class Home extends StatelessWidget {
                           );
                         },
                       ),
-                      subtitle: const Text("dsf"),
-                      isThreeLine: true,
+                      subtitle:
+                          amount.subtitle.isEmpty
+                              ? null
+                              : Text(amount.subtitle),
+
                       minVerticalPadding: 15,
                     ),
                     Divider(
@@ -82,10 +165,10 @@ class Home extends StatelessWidget {
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
+        elevation: 0,
+        fixedColor: AppColors.darkGrey,
         showSelectedLabels: false,
         showUnselectedLabels: false,
-        selectedItemColor: AppColors.darkGrey,
-        unselectedItemColor: AppColors.darkGrey,
         onTap: (value) {
           if (value == 0) {
             context.push('/chart');

@@ -18,6 +18,7 @@ class AddExpense extends StatefulWidget {
 class _AddExpenseState extends State<AddExpense> {
   TextEditingController numController = TextEditingController();
   TextEditingController titleController = TextEditingController();
+  TextEditingController subTitleController = TextEditingController();
 
   final UnderlineInputBorder _border = UnderlineInputBorder(
     borderSide: BorderSide(width: 2, color: AppColors.grey),
@@ -39,7 +40,7 @@ class _AddExpenseState extends State<AddExpense> {
         leadingWidth: 70,
         centerTitle: true,
         title: const Text(
-          "Expense",
+          "Add New Expense",
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
       ),
@@ -53,7 +54,7 @@ class _AddExpenseState extends State<AddExpense> {
               keyboardType: TextInputType.number,
               autofocus: true,
               decoration: InputDecoration(
-                labelText: "Amount",
+                labelText: "Enter Amount",
                 prefixIcon: BlocBuilder<CurrencyBloc, CurrencyState>(
                   builder: (context, state) {
                     return SizedBox(
@@ -83,11 +84,25 @@ class _AddExpenseState extends State<AddExpense> {
             const SizedBox(height: 50),
             const Align(
               alignment: Alignment.centerLeft,
-              child: Text("Title"),
+              child: Text("Expense Title"),
               //
             ),
             TextField(
               controller: titleController,
+              decoration: InputDecoration(
+                border: _border,
+                enabledBorder: _border,
+                focusedBorder: _border,
+              ),
+            ),
+            const SizedBox(height: 50),
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Text("Expense Description"),
+              //
+            ),
+            TextField(
+              controller: subTitleController,
               decoration: InputDecoration(
                 border: _border,
                 enabledBorder: _border,
@@ -100,23 +115,33 @@ class _AddExpenseState extends State<AddExpense> {
                 if (numController.text.isNotEmpty) {
                   double? amount = double.tryParse(numController.text);
                   String title = titleController.text;
+                  String subtitle = subTitleController.text;
 
                   if (amount != null) {
-                    amountProvider.addAmount(title, amount);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text("Amount added successfully"),
-                        showCloseIcon: true,
-                        duration: Duration(milliseconds: 500),
-                      ),
-                    );
+                    amountProvider.addAmount(title, subtitle, amount);
                     context.pop();
+                    showDialog<String>(
+                      context: context,
+                      builder:
+                          (BuildContext context) => AlertDialog(
+                            title: const Text('Amount added'),
+                            content: const Text(
+                              "Your expense has been added successfully!\n\nLong press to delete it.",
+                            ),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () => context.pop(),
+                                child: const Text('OK'),
+                              ),
+                            ],
+                          ),
+                    );
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                        content: Text("Invalid Amount"),
+                        content: Text("Please enter a valid amount"),
                         showCloseIcon: true,
-                        duration: Duration(milliseconds: 500),
+                        duration: Duration(seconds: 1),
                       ),
                     );
                   }
@@ -125,14 +150,16 @@ class _AddExpenseState extends State<AddExpense> {
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text("Please enter any amount"),
+                      content: Text(
+                        "Please enter an amount. Amount cannot be empty.",
+                      ),
                       showCloseIcon: true,
-                      duration: Duration(milliseconds: 500),
+                      duration: Duration(seconds: 1),
                     ),
                   );
                 }
               },
-              child: const Text("Add"),
+              child: const Text("Save Expense"),
             ),
           ],
         ),
