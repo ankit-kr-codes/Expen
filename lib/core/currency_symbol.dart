@@ -1,4 +1,5 @@
-List<Map<String, String>> currencySymbol = [
+//Currency name with symbols
+const List currencySymbol = [
   {"name": "Dollar", "symbol": "\$"},
   {"name": "Euro", "symbol": "€"},
   {"name": "Rupee", "symbol": "₹"},

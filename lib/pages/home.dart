@@ -1,7 +1,7 @@
 import 'package:expen/bloc/currency/currency_bloc.dart';
 import 'package:expen/bloc/currency/currency_state.dart';
 import 'package:expen/core/theme.dart';
-import 'package:expen/domain/currency_symbol.dart';
+import 'package:expen/core/currency_symbol.dart';
 import 'package:expen/provider/amount_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,10 +13,12 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Size mediaQuery = MediaQuery.of(context).size;
-
+    //Provider
     var amountProvider = Provider.of<AmountProvider>(context);
     double totalAmount = Provider.of<AmountProvider>(context).totalAmount;
+
+    //For getting size of screen
+    Size mediaQuery = MediaQuery.of(context).size;
 
     return Scaffold(
       appBar: AppBar(
@@ -26,6 +28,7 @@ class Home extends StatelessWidget {
             tooltip: "",
             itemBuilder:
                 (context) => [
+                  //For deleting all the expense
                   PopupMenuItem(
                     onTap: () {
                       showDialog<String>(
@@ -78,8 +81,13 @@ class Home extends StatelessWidget {
                   children: [
                     Text(
                       "${currencySymbol[state.selectedCurrencyIndex]["symbol"]}$totalAmount",
-                      style: const TextStyle(
-                        fontSize: 24,
+                      style: TextStyle(
+                        fontSize: 28,
+                        color:
+                            //Change color according to target
+                            amountProvider.range < amountProvider.totalAmount
+                                ? AppColors.red
+                                : null,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -93,6 +101,7 @@ class Home extends StatelessWidget {
             ),
           ),
           Expanded(
+            //This will show all expenses
             child: ListView.builder(
               itemCount: amountProvider.amounts.length,
               physics: const ClampingScrollPhysics(),
@@ -101,6 +110,7 @@ class Home extends StatelessWidget {
                 return Column(
                   children: [
                     ListTile(
+                      //For deleting specific expense
                       onLongPress: () {
                         showDialog<String>(
                           context: context,
@@ -134,7 +144,7 @@ class Home extends StatelessWidget {
                         );
                       },
                       title: Text(
-                        amount.title.isEmpty ? "Random" : amount.title,
+                        amount.title.isEmpty ? "Miscellaneous" : amount.title,
                       ),
                       trailing: BlocBuilder<CurrencyBloc, CurrencyState>(
                         builder: (context, state) {
@@ -164,6 +174,8 @@ class Home extends StatelessWidget {
           ),
         ],
       ),
+
+      //Navigation for settings and chart
       bottomNavigationBar: BottomNavigationBar(
         elevation: 0,
         fixedColor: AppColors.darkGrey,
@@ -186,6 +198,7 @@ class Home extends StatelessWidget {
         ],
       ),
 
+      //For adding expense
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: Stack(
         alignment: Alignment.center,

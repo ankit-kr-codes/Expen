@@ -1,7 +1,7 @@
 import 'package:expen/bloc/currency/currency_bloc.dart';
 import 'package:expen/bloc/currency/currency_state.dart';
 import 'package:expen/core/theme.dart';
-import 'package:expen/domain/currency_symbol.dart';
+import 'package:expen/core/currency_symbol.dart';
 import 'package:expen/provider/amount_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -16,10 +16,12 @@ class AddExpense extends StatefulWidget {
 }
 
 class _AddExpenseState extends State<AddExpense> {
+  //Controllers
   TextEditingController numController = TextEditingController();
   TextEditingController titleController = TextEditingController();
   TextEditingController subTitleController = TextEditingController();
 
+  //Border design
   final OutlineInputBorder _outlineInputBorder = OutlineInputBorder(
     borderRadius: BorderRadius.circular(30),
     borderSide: BorderSide.none,
@@ -27,6 +29,7 @@ class _AddExpenseState extends State<AddExpense> {
 
   @override
   Widget build(BuildContext context) {
+    //Provider
     var amountProvider = Provider.of<AmountProvider>(context);
 
     return Scaffold(
@@ -50,6 +53,7 @@ class _AddExpenseState extends State<AddExpense> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            //Getting amount from user
             SizedBox(
               width: 150,
               child: TextField(
@@ -70,7 +74,7 @@ class _AddExpenseState extends State<AddExpense> {
                           child: Text(
                             currencySymbol[state
                                     .selectedCurrencyIndex]["symbol"] ??
-                                "",
+                                "", //This will show selected currency symbol
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 18,
@@ -90,6 +94,8 @@ class _AddExpenseState extends State<AddExpense> {
               ),
             ),
             const SizedBox(height: 50),
+
+            //Getting title from the user
             const Align(
               alignment: Alignment.centerLeft,
               child: Text("Expense Title"),
@@ -108,6 +114,8 @@ class _AddExpenseState extends State<AddExpense> {
               ),
             ),
             const SizedBox(height: 30),
+
+            //Getting description from the user
             const Align(
               alignment: Alignment.centerLeft,
               child: Text("Expense Description"),
@@ -126,8 +134,12 @@ class _AddExpenseState extends State<AddExpense> {
               ),
             ),
             const SizedBox(height: 40),
+
+            //Saving expense data
             ElevatedButton(
+              //This will add expense to the list(it will be shown in home screen)
               onPressed: () {
+                //Check if the textfield is empty or not
                 if (numController.text.isNotEmpty) {
                   double? amount = double.tryParse(numController.text);
                   String title = titleController.text;
@@ -136,6 +148,7 @@ class _AddExpenseState extends State<AddExpense> {
                   if (amount != null) {
                     amountProvider.addAmount(title, subtitle, amount);
                     context.pop();
+                    //User will go to home screen and get a dialog box to notify that expense is added
                     showDialog<String>(
                       context: context,
                       builder:
@@ -153,6 +166,7 @@ class _AddExpenseState extends State<AddExpense> {
                           ),
                     );
                   } else {
+                    //Inform user that entered amout in invalid (means its not double value)
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text("Please enter a valid amount"),
@@ -161,9 +175,10 @@ class _AddExpenseState extends State<AddExpense> {
                       ),
                     );
                   }
-                  numController.clear();
-                  titleController.clear();
+                  numController.clear(); // This will clear the textfield
+                  titleController.clear(); // This will clear the textfield
                 } else {
+                  //If textfield is empty then user will get this snackbar
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text(

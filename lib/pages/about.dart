@@ -7,6 +7,7 @@ import 'package:url_launcher/url_launcher.dart';
 class About extends StatelessWidget {
   const About({super.key});
 
+  //Function to redirect for contacting developer
   Future<void> redirectUrl(query) async {
     Uri url = Uri.parse(query);
 
@@ -15,6 +16,7 @@ class About extends StatelessWidget {
     }
   }
 
+  //This function will show a license and credits page(everything used in the app)
   void showLicensePage({
     required BuildContext context,
     String? applicationName,
@@ -51,6 +53,7 @@ class About extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            //Contact Section
             Text(
               "Contact",
               style: TextStyle(
@@ -68,7 +71,9 @@ class About extends StatelessWidget {
             ),
             ListTile(
               onTap: () {
-                redirectUrl("mailto:ankit.kr.codes@gmail.com");
+                redirectUrl(
+                  "mailto:ankit.kr.codes@gmail.com?subject={From Expen App}",
+                );
               },
               title: const Text("Email"),
               leading: const Icon(Icons.email_outlined),
@@ -97,6 +102,8 @@ class About extends StatelessWidget {
               subtitle: Text(context.watch<VersionProvider>().version),
               leading: const Icon(Icons.android),
             ),
+
+            //Developers Section
             Text(
               "Developers Section",
               style: TextStyle(

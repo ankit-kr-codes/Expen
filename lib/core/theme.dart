@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
+  //Colors which will be used in the app
   static Color transparent = const Color.fromRGBO(0, 0, 0, 0);
   static Color lightTransparent = const Color.fromRGBO(116, 116, 116, 0.09);
   static Color white = const Color.fromRGBO(255, 255, 255, 1);
@@ -12,5 +13,6 @@ class AppColors {
   static Color green = const Color.fromRGBO(19, 150, 38, 1);
   static Color blue = const Color.fromRGBO(16, 105, 164, 1);
 
+  //Gradient colors for chart bars
   List<Color> gradientColors = [Colors.blue, Colors.purpleAccent];
 }

@@ -1,5 +1,5 @@
 class Amount {
-  String id;
+  String id; //Unique id for each expense
   String title;
   String subtitle;
   double? amount;

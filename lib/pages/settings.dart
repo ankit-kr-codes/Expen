@@ -1,5 +1,5 @@
 import 'package:expen/core/theme.dart';
-import 'package:expen/domain/currency_symbol.dart';
+import 'package:expen/core/currency_symbol.dart';
 import 'package:expen/provider/amount_provider.dart';
 import 'package:expen/provider/theme_provider.dart';
 import 'package:flutter/material.dart';
@@ -19,13 +19,16 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
-  bool isSwitched = false;
+  //Controllers
   TextEditingController rangeController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    //Provider
     var rangeProvider = Provider.of<AmountProvider>(context);
     var themeProvider = Provider.of<ThemeProvider>(context);
+
+    //For finding current app theme
     AppTheme currentTheme = AppTheme.values.firstWhere(
       (theme) =>
           themeProvider.themeMode == ThemeMode.system &&
@@ -43,10 +46,13 @@ class _SettingsState extends State<Settings> {
         child: ListView(
           children: [
             const SizedBox(height: 10),
+
+            //For selecting currency
             settingsList(
               "Choose Currency",
               TextButton(
                 onPressed: () {
+                  //This will open a currecny picker where user can select their currency
                   picker(context);
                 },
                 child: BlocBuilder<CurrencyBloc, CurrencyState>(
@@ -59,6 +65,8 @@ class _SettingsState extends State<Settings> {
                 ),
               ),
             ),
+
+            //For selecting app theme
             settingsList(
               "Select App Theme ",
               DropdownButton<AppTheme>(
@@ -71,6 +79,8 @@ class _SettingsState extends State<Settings> {
                   DropdownMenuItem(value: AppTheme.light, child: Text("Light")),
                   DropdownMenuItem(value: AppTheme.dark, child: Text("Dark")),
                 ],
+
+                //For changing the theme
                 onChanged: (AppTheme? newTheme) {
                   if (newTheme != null) {
                     themeProvider.setTheme(newTheme);
@@ -79,10 +89,12 @@ class _SettingsState extends State<Settings> {
               ),
             ),
 
+            //For setting target
             settingsList(
               "Set Target",
               TextButton(
                 onPressed: () {
+                  //This will open a dialog box where user can add their target
                   showDialog<String>(
                     context: context,
                     builder:
@@ -131,6 +143,7 @@ class _SettingsState extends State<Settings> {
                             ),
                             TextButton(
                               onPressed: () {
+                                //verify if input is empty or not
                                 if (rangeController.text.isNotEmpty) {
                                   double limit = double.parse(
                                     rangeController.text,
@@ -152,6 +165,7 @@ class _SettingsState extends State<Settings> {
 
             const SizedBox(height: 20),
             const Divider(),
+            //This will take user to about page
             ListTile(
               onTap: () => context.push('/about'),
               title: const Text("About"),
@@ -163,6 +177,7 @@ class _SettingsState extends State<Settings> {
     );
   }
 
+  //Widget for setting list
   Widget settingsList(String text, specificWidget) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
@@ -180,6 +195,7 @@ class _SettingsState extends State<Settings> {
     );
   }
 
+  //Currencny Picker
   Future<String?> picker(BuildContext context) {
     return showMaterialScrollPicker<String>(
       context: context,

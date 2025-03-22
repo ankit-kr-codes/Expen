@@ -2,7 +2,7 @@ import 'dart:math';
 import 'package:expen/bloc/currency/currency_bloc.dart';
 import 'package:expen/bloc/currency/currency_state.dart';
 import 'package:expen/core/theme.dart';
-import 'package:expen/domain/currency_symbol.dart';
+import 'package:expen/core/currency_symbol.dart';
 import 'package:expen/provider/amount_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -14,9 +14,12 @@ class Chart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //Provider
     var amountList = Provider.of<AmountProvider>(context).amounts;
     double totalAmount = Provider.of<AmountProvider>(context).totalAmount;
     var rangeProvider = Provider.of<AmountProvider>(context);
+
+    //For getting size of screen
     Size mediaQuery = MediaQuery.of(context).size;
 
     return Scaffold(
@@ -38,15 +41,6 @@ class Chart extends StatelessWidget {
                 height: mediaQuery.height * 0.6,
                 child: BarChart(
                   BarChartData(
-                    extraLinesData: ExtraLinesData(
-                      horizontalLines: [
-                        HorizontalLine(
-                          y: rangeProvider.range,
-                          color: AppColors.red,
-                        ),
-                        //
-                      ],
-                    ),
                     maxY:
                         amountList.isNotEmpty
                             ? amountList
@@ -64,7 +58,7 @@ class Chart extends StatelessWidget {
                           (value) => FlLine(
                             color: AppColors.grey,
                             strokeWidth: 1,
-                            dashArray: [5, 5],
+                            dashArray: [10, 10],
                           ),
                     ),
                     alignment: BarChartAlignment.spaceEvenly,
@@ -76,7 +70,7 @@ class Chart extends StatelessWidget {
                         barRods: [
                           BarChartRodData(
                             toY: amountList[index].amount!,
-                            width: 20,
+                            width: 25,
                             borderRadius: const BorderRadius.only(
                               topLeft: Radius.circular(50),
                               topRight: Radius.circular(50),
@@ -94,7 +88,7 @@ class Chart extends StatelessWidget {
                       leftTitles: AxisTitles(
                         sideTitles: SideTitles(
                           showTitles: true,
-                          reservedSize: 40,
+                          reservedSize: 60,
                           getTitlesWidget:
                               (
                                 value,
@@ -128,6 +122,8 @@ class Chart extends StatelessWidget {
             ),
 
             const SizedBox(height: 30),
+
+            //Show total expenditure
             BlocBuilder<CurrencyBloc, CurrencyState>(
               builder: (context, state) {
                 return Text(
@@ -140,6 +136,8 @@ class Chart extends StatelessWidget {
               },
             ),
             const SizedBox(height: 10),
+
+            //Show target set by the user
             BlocBuilder<CurrencyBloc, CurrencyState>(
               builder: (context, state) {
                 return Text(
@@ -147,6 +145,7 @@ class Chart extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 14,
                     color:
+                        //Change color according to target and expenditure
                         rangeProvider.range == 0
                             ? AppColors.darkGrey
                             : rangeProvider.range < totalAmount
