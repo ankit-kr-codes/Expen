@@ -100,6 +100,12 @@ class Home extends StatelessWidget {
               },
             ),
           ),
+
+          Text(
+            amountProvider.amounts.isEmpty ? "Nothing to show here!" : "",
+            style: TextStyle(color: AppColors.grey),
+          ),
+
           Expanded(
             //This will show all expenses
             child: ListView.builder(
@@ -107,6 +113,7 @@ class Home extends StatelessWidget {
               physics: const ClampingScrollPhysics(),
               itemBuilder: (BuildContext context, int index) {
                 var amount = amountProvider.amounts[index];
+
                 return Column(
                   children: [
                     ListTile(
@@ -181,6 +188,8 @@ class Home extends StatelessWidget {
         fixedColor: AppColors.darkGrey,
         showSelectedLabels: false,
         showUnselectedLabels: false,
+        type: BottomNavigationBarType.fixed,
+        enableFeedback: false,
         onTap: (value) {
           if (value == 0) {
             context.push('/chart');

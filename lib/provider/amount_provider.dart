@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:expen/model/amount.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
 class AmountProvider with ChangeNotifier {
@@ -8,6 +9,11 @@ class AmountProvider with ChangeNotifier {
   double _range = 2000; //Default target is set to 2000
   final Uuid _uuid =
       const Uuid(); //This will generate a unique id for the expense
+
+  //Constructor
+  AmountProvider() {
+    _loadRange();
+  }
 
   //Getters
   List<Amount> get amounts =>
@@ -27,8 +33,18 @@ class AmountProvider with ChangeNotifier {
   }
 
   //This function sets a target for spending money
-  void setRange(double newRange) {
+  Future<void> setRange(double newRange) async {
     _range = newRange;
+    notifyListeners();
+
+    var prefs = await SharedPreferences.getInstance();
+    prefs.setDouble('targetLimit', newRange);
+  }
+
+  //This function loads the range when its called
+  Future<void> _loadRange() async {
+    var prefs = await SharedPreferences.getInstance();
+    _range = prefs.getDouble('targetLimit') ?? 0; // Default to 0 if not set
     notifyListeners();
   }
 

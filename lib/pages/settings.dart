@@ -169,6 +169,7 @@ class _SettingsState extends State<Settings> {
             ListTile(
               onTap: () => context.push('/about'),
               title: const Text("About"),
+              splashColor: AppColors.transparent,
               leading: const Icon(Icons.info_outline),
             ),
           ],

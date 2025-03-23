@@ -66,6 +66,7 @@ class About extends StatelessWidget {
                 redirectUrl("https://x.com/ankit_kr_codes");
               },
               title: const Text("Twitter"),
+              splashColor: AppColors.transparent,
               leading: const Icon(Icons.person),
               subtitle: const Text("@ankit_kr_codes"),
             ),
@@ -76,6 +77,7 @@ class About extends StatelessWidget {
                 );
               },
               title: const Text("Email"),
+              splashColor: AppColors.transparent,
               leading: const Icon(Icons.email_outlined),
               subtitle: const Text("ankit.kr.codes@gmail.com"),
             ),
@@ -94,12 +96,14 @@ class About extends StatelessWidget {
               },
               title: const Text("Credits & Licenses"),
               leading: const Icon(Icons.badge_outlined),
+              splashColor: AppColors.transparent,
               subtitle: const Text("Open Source Licesnses"),
             ),
             ListTile(
               onTap: () {},
               title: const Text("App Version"),
               subtitle: Text(context.watch<VersionProvider>().version),
+              splashColor: AppColors.transparent,
               leading: const Icon(Icons.android),
             ),
 
@@ -113,9 +117,10 @@ class About extends StatelessWidget {
             ),
             ListTile(
               onTap: () {
-                redirectUrl("https://github.com/ankit-kr-codes");
+                redirectUrl("https://github.com/ankit-kr-codes/Expen");
               },
               title: const Text("GitHub"),
+              splashColor: AppColors.transparent,
               leading: const Icon(Icons.code),
               subtitle: const Text("ankit-kr-codes"),
             ),
