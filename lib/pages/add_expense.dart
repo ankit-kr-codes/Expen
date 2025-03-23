@@ -1,11 +1,8 @@
-import 'package:expen/bloc/currency/currency_bloc.dart';
-import 'package:expen/bloc/currency/currency_state.dart';
 import 'package:expen/core/theme.dart';
-import 'package:expen/core/currency_symbol.dart';
 import 'package:expen/provider/amount_provider.dart';
+import 'package:expen/provider/currency_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
 class AddExpense extends StatefulWidget {
@@ -31,6 +28,7 @@ class _AddExpenseState extends State<AddExpense> {
   Widget build(BuildContext context) {
     //Provider
     var amountProvider = Provider.of<AmountProvider>(context);
+    var currencyProvider = Provider.of<CurrencyProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -63,27 +61,21 @@ class _AddExpenseState extends State<AddExpense> {
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: AppColors.lightTransparent,
-                  // labelText: "Enter Amount",
                   hintText: "0.00",
-                  prefixIcon: BlocBuilder<CurrencyBloc, CurrencyState>(
-                    builder: (context, state) {
-                      return SizedBox(
-                        width: 0,
-                        child: Center(
-                          heightFactor: 0.2,
-                          child: Text(
-                            currencySymbol[state
-                                    .selectedCurrencyIndex]["symbol"] ??
-                                "", //This will show selected currency symbol
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: AppColors.darkGrey,
-                            ),
-                          ),
+                  prefixIcon: SizedBox(
+                    width: 0,
+                    child: Center(
+                      heightFactor: 0.2,
+                      child: Text(
+                        //This will show selected currency symbol
+                        currencyProvider.selectedCurrencySymbol,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: AppColors.darkGrey,
                         ),
-                      );
-                    },
+                      ),
+                    ),
                   ),
                   prefixStyle: TextStyle(color: AppColors.grey),
                   border: _outlineInputBorder,
@@ -99,7 +91,6 @@ class _AddExpenseState extends State<AddExpense> {
             const Align(
               alignment: Alignment.centerLeft,
               child: Text("Expense Title"),
-              //
             ),
             const SizedBox(height: 10),
             TextField(
@@ -119,7 +110,6 @@ class _AddExpenseState extends State<AddExpense> {
             const Align(
               alignment: Alignment.centerLeft,
               child: Text("Expense Description"),
-              //
             ),
             const SizedBox(height: 10),
             TextField(
@@ -166,7 +156,7 @@ class _AddExpenseState extends State<AddExpense> {
                           ),
                     );
                   } else {
-                    //Inform user that entered amout in invalid (means its not double value)
+                    //Inform user that entered amount is invalid (means it's not a double value)
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text("Please enter a valid amount"),

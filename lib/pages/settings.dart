@@ -1,15 +1,12 @@
 import 'package:expen/core/theme.dart';
 import 'package:expen/core/currency_symbol.dart';
 import 'package:expen/provider/amount_provider.dart';
+import 'package:expen/provider/currency_provider.dart';
 import 'package:expen/provider/theme_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_material_pickers/helpers/show_scroll_picker.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import '../bloc/currency/currency_bloc.dart';
-import '../bloc/currency/currency_event.dart';
-import '../bloc/currency/currency_state.dart';
 
 class Settings extends StatefulWidget {
   const Settings({super.key});
@@ -24,7 +21,7 @@ class _SettingsState extends State<Settings> {
 
   @override
   Widget build(BuildContext context) {
-    //Provider
+    //Providers
     var rangeProvider = Provider.of<AmountProvider>(context);
     var themeProvider = Provider.of<ThemeProvider>(context);
 
@@ -55,10 +52,10 @@ class _SettingsState extends State<Settings> {
                   //This will open a currecny picker where user can select their currency
                   picker(context);
                 },
-                child: BlocBuilder<CurrencyBloc, CurrencyState>(
-                  builder: (context, state) {
+                child: Consumer<CurrencyProvider>(
+                  builder: (context, currencyProvider, child) {
                     return Text(
-                      "${currencySymbol[state.selectedCurrencyIndex]["name"] ?? ""} - ${currencySymbol[state.selectedCurrencyIndex]["symbol"] ?? ""} ",
+                      "${currencySymbol[currencyProvider.selectedCurrencyIndex]["name"] ?? ""} - ${currencySymbol[currencyProvider.selectedCurrencyIndex]["symbol"] ?? ""} ",
                       style: const TextStyle(fontSize: 16),
                     );
                   },
@@ -105,17 +102,14 @@ class _SettingsState extends State<Settings> {
                             keyboardType: TextInputType.number,
                             decoration: InputDecoration(
                               hintText: "Enter your target",
-                              prefixIcon: BlocBuilder<
-                                CurrencyBloc,
-                                CurrencyState
-                              >(
-                                builder: (context, state) {
+                              prefixIcon: Consumer<CurrencyProvider>(
+                                builder: (context, currencyProvider, child) {
                                   return SizedBox(
                                     width: 0,
                                     child: Center(
                                       heightFactor: 0.2,
                                       child: Text(
-                                        currencySymbol[state
+                                        currencySymbol[currencyProvider
                                                 .selectedCurrencyIndex]["symbol"] ??
                                             "",
                                         textAlign: TextAlign.left,
@@ -128,12 +122,7 @@ class _SettingsState extends State<Settings> {
                                   );
                                 },
                               ),
-                              border: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  width: 2,
-                                  color: AppColors.grey,
-                                ),
-                              ),
+                              border: const UnderlineInputBorder(),
                             ),
                           ),
                           actions: <Widget>[
@@ -165,11 +154,11 @@ class _SettingsState extends State<Settings> {
 
             const SizedBox(height: 20),
             const Divider(),
+
             //This will take user to about page
             ListTile(
               onTap: () => context.push('/about'),
               title: const Text("About"),
-              splashColor: AppColors.transparent,
               leading: const Icon(Icons.info_outline),
             ),
           ],
@@ -179,17 +168,13 @@ class _SettingsState extends State<Settings> {
   }
 
   //Widget for setting list
-  Widget settingsList(String text, specificWidget) {
+  Widget settingsList(String text, Widget specificWidget) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            text,
-            style: const TextStyle(fontSize: 16),
-            //
-          ),
+          Text(text, style: const TextStyle(fontSize: 16)),
           specificWidget,
         ],
       ),
@@ -202,11 +187,15 @@ class _SettingsState extends State<Settings> {
       context: context,
       title: 'Select Your Currency',
       items:
-          currencySymbol.map((e) => '${e["name"]} (${e["symbol"]})').toList(),
+          currencySymbol
+              .map(
+                (e) => '${e["name"]} (${e["symbol"]})',
+                //
+              )
+              .toList(),
       selectedItem:
           currencySymbol[context
-              .read<CurrencyBloc>()
-              .state
+              .read<CurrencyProvider>()
               .selectedCurrencyIndex]["name"]!,
       onChanged: (value) {
         var newIndex = currencySymbol.indexWhere(
@@ -214,7 +203,7 @@ class _SettingsState extends State<Settings> {
         );
 
         if (newIndex != -1) {
-          context.read<CurrencyBloc>().add(SelectCurrency(newIndex));
+          context.read<CurrencyProvider>().selectCurrency(newIndex);
         }
       },
     );

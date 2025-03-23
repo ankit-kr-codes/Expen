@@ -1,10 +1,8 @@
-import 'package:expen/bloc/currency/currency_bloc.dart';
-import 'package:expen/bloc/currency/currency_state.dart';
 import 'package:expen/core/theme.dart';
 import 'package:expen/core/currency_symbol.dart';
 import 'package:expen/provider/amount_provider.dart';
+import 'package:expen/provider/currency_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -15,7 +13,7 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     //Provider
     var amountProvider = Provider.of<AmountProvider>(context);
-    double totalAmount = Provider.of<AmountProvider>(context).totalAmount;
+    double totalAmount = amountProvider.totalAmount;
 
     //For getting size of screen
     Size mediaQuery = MediaQuery.of(context).size;
@@ -74,13 +72,13 @@ class Home extends StatelessWidget {
         children: [
           SizedBox(
             height: mediaQuery.height * 0.25,
-            child: BlocBuilder<CurrencyBloc, CurrencyState>(
-              builder: (context, state) {
+            child: Consumer<CurrencyProvider>(
+              builder: (context, currencyProvider, child) {
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "${currencySymbol[state.selectedCurrencyIndex]["symbol"]}$totalAmount",
+                      "${currencySymbol[currencyProvider.selectedCurrencyIndex]["symbol"]}$totalAmount",
                       style: TextStyle(
                         fontSize: 28,
                         color:
@@ -153,10 +151,10 @@ class Home extends StatelessWidget {
                       title: Text(
                         amount.title.isEmpty ? "Miscellaneous" : amount.title,
                       ),
-                      trailing: BlocBuilder<CurrencyBloc, CurrencyState>(
-                        builder: (context, state) {
+                      trailing: Consumer<CurrencyProvider>(
+                        builder: (context, currencyProvider, child) {
                           return Text(
-                            "${currencySymbol[state.selectedCurrencyIndex]["symbol"]}${amount.amount.toString()}",
+                            "${currencySymbol[currencyProvider.selectedCurrencyIndex]["symbol"]}${amount.amount.toString()}",
                             style: const TextStyle(fontSize: 14),
                           );
                         },

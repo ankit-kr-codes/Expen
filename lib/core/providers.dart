@@ -1,9 +1,8 @@
-import 'package:expen/bloc/currency/currency_bloc.dart';
 import 'package:expen/provider/amount_provider.dart';
+import 'package:expen/provider/currency_provider.dart';
 import 'package:expen/provider/theme_provider.dart';
 import 'package:expen/provider/version_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
 Widget appProvider(Widget child) {
@@ -19,14 +18,10 @@ Widget appProvider(Widget child) {
       ChangeNotifierProvider(
         create: (context) => VersionProvider()..loadVersion(),
       ),
+
+      //For Currency Symbols
+      ChangeNotifierProvider(create: (context) => CurrencyProvider()),
     ],
-    child: MultiBlocProvider(
-      providers: [
-        //For currency symbol
-        BlocProvider(create: (context) => CurrencyBloc()),
-        //
-      ],
-      child: child,
-    ),
+    child: child,
   );
 }
