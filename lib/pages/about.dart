@@ -61,15 +61,15 @@ class About extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            ListTile(
-              onTap: () {
-                redirectUrl("https://x.com/ankit_kr_codes");
-              },
-              title: const Text("Twitter"),
-              splashColor: AppColors.transparent,
-              leading: const Icon(Icons.person),
-              subtitle: const Text("@ankit_kr_codes"),
-            ),
+            // ListTile(
+            //   onTap: () {
+            //     redirectUrl("https://x.com/ankit_kr_codes");
+            //   },
+            //   title: const Text("Twitter"),
+            //   splashColor: AppColors.transparent,
+            //   leading: const Icon(Icons.person),
+            //   subtitle: const Text("@ankit_kr_codes"),
+            // ),
             ListTile(
               onTap: () {
                 redirectUrl(

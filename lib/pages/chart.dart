@@ -42,7 +42,7 @@ class Chart extends StatelessWidget {
                     maxY:
                         amountList.isNotEmpty
                             ? amountList
-                                    .map((e) => e.amount ?? 0)
+                                    .map((e) => e.amount)
                                     .reduce(max)
                                     .toDouble() +
                                 50
@@ -67,7 +67,7 @@ class Chart extends StatelessWidget {
                         x: index,
                         barRods: [
                           BarChartRodData(
-                            toY: amountList[index].amount!,
+                            toY: amountList[index].amount,
                             width: 25,
                             borderRadius: const BorderRadius.only(
                               topLeft: Radius.circular(50),

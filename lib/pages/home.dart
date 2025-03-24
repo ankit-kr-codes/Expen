@@ -136,7 +136,7 @@ class Home extends StatelessWidget {
                                   ),
                                   TextButton(
                                     onPressed: () {
-                                      amountProvider.deleteAmount(amount.id);
+                                      amountProvider.deleteAmount(index);
                                       context.pop();
                                     },
                                     child: Text(
@@ -149,13 +149,23 @@ class Home extends StatelessWidget {
                         );
                       },
                       title: Text(
-                        amount.title.isEmpty ? "Miscellaneous" : amount.title,
+                        amount.title.isEmpty ? "Other" : amount.title,
                       ),
                       trailing: Consumer<CurrencyProvider>(
                         builder: (context, currencyProvider, child) {
-                          return Text(
-                            "${currencySymbol[currencyProvider.selectedCurrencyIndex]["symbol"]}${amount.amount.toString()}",
-                            style: const TextStyle(fontSize: 14),
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                "${currencySymbol[currencyProvider.selectedCurrencyIndex]["symbol"]}${amount.amount.toString()}",
+                                style: const TextStyle(fontSize: 14),
+                              ),
+                              Text(
+                                amountProvider.showDateTime
+                                    ? amount.dateTime
+                                    : "",
+                              ),
+                            ],
                           );
                         },
                       ),

@@ -1,34 +1,43 @@
+import 'package:expen/hive/hive_database.dart';
 import 'package:flutter/material.dart';
-import 'package:expen/model/amount.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:uuid/uuid.dart';
+import 'package:intl/intl.dart';
 
 class AmountProvider with ChangeNotifier {
-  //Variables
-  final List<Amount> _amounts = [];
-  double _range = 2000; //Default target is set to 2000
-  final Uuid _uuid =
-      const Uuid(); //This will generate a unique id for the expense
+  // Variables
+  final Box<Amount> _box = Hive.box<Amount>('expenses');
+  double _range = 2000;
+  bool _showDateTime = true;
 
-  //Constructor
+  // Constructor
   AmountProvider() {
     _loadRange();
+    _loadDateTime();
   }
 
-  //Getters
-  List<Amount> get amounts =>
-      _amounts.reversed
-          .toList(); //.reversed the list to get latest expense at top of home screen
-
+  // Getters
+  List<Amount> get amounts => _box.values.toList().reversed.toList();
   double get range => _range;
+  bool get showDateTime => _showDateTime;
   double get totalAmount =>
-      _amounts.fold(0, (sum, item) => sum + (item.amount ?? 0).toDouble());
+      _box.values.fold(0, (sum, item) => sum + (item.amount).toDouble());
 
   //Functions
 
-  //This function calculates total amount to show in home screen and chart screen
-  void calculateTotalAmount(Amount amount) {
-    _amounts.add(amount);
+  //This Function Show Date and Time
+  Future showDateTimeFunction(bool newDateTime) async {
+    _showDateTime = newDateTime;
+    notifyListeners();
+
+    var pref = await SharedPreferences.getInstance();
+    pref.setBool('showDateTime', newDateTime);
+  }
+
+  //This Function Loads Date and Time
+  Future _loadDateTime() async {
+    var pref = await SharedPreferences.getInstance();
+    _showDateTime = pref.getBool('showDateTime') ?? true;
     notifyListeners();
   }
 
@@ -44,27 +53,33 @@ class AmountProvider with ChangeNotifier {
   //This function loads the range when its called
   Future<void> _loadRange() async {
     var prefs = await SharedPreferences.getInstance();
-    _range = prefs.getDouble('targetLimit') ?? 0; // Default to 0 if not set
+    _range = prefs.getDouble('targetLimit') ?? 2000;
     notifyListeners();
   }
 
   //This function adds expense to the list(shows in home screen)
-  void addAmount(String title, String subtitle, double? amount) {
-    _amounts.add(
-      Amount(id: _uuid.v4(), title: title, subtitle: subtitle, amount: amount),
-    );
+  void addAmount(String title, String subtitle, double amount) {
+    String formatDateTime(DateTime dateTime) {
+      return DateFormat('dd MMMM yyyy  hh:mm a').format(dateTime);
+    }
+
+    String dateTime = formatDateTime(DateTime.now());
+
+    var newAmount = Amount(title, subtitle, amount, dateTime);
+
+    _box.add(newAmount); // Store in Hive
     notifyListeners();
   }
 
   //This function delete a specific expense
-  void deleteAmount(String id) {
-    _amounts.removeWhere((amount) => amount.id == id);
+  void deleteAmount(int index) {
+    _box.deleteAt(index);
     notifyListeners();
   }
 
   //This function delets all the expenses
   void deleteAllExpenses() {
-    _amounts.clear();
+    _box.clear();
     notifyListeners();
   }
 }

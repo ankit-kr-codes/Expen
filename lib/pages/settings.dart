@@ -152,6 +152,20 @@ class _SettingsState extends State<Settings> {
               ),
             ),
 
+            //For turning on Date Time
+            settingsList(
+              "Show Date Time",
+              Consumer<AmountProvider>(
+                builder: (context, rangeProvider, child) {
+                  return Switch(
+                    value: rangeProvider.showDateTime,
+                    onChanged: (value) {
+                      rangeProvider.showDateTimeFunction(value);
+                    },
+                  );
+                },
+              ),
+            ),
             const SizedBox(height: 20),
             const Divider(),
 
