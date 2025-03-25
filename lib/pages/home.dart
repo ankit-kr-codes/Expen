@@ -136,7 +136,7 @@ class Home extends StatelessWidget {
                                   ),
                                   TextButton(
                                     onPressed: () {
-                                      amountProvider.deleteAmount(index);
+                                      amountProvider.deleteAmount(amount);
                                       context.pop();
                                     },
                                     child: Text(

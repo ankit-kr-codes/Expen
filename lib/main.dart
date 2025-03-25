@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:expen/core/providers.dart';
 import 'package:expen/core/router.dart';
 import 'package:expen/core/theme.dart';
@@ -23,6 +25,7 @@ void main() async {
     await backupAndResetHive();
   }
 
+  PlatformDispatcher.instance.onPlatformConfigurationChanged = () {};
   runApp(appProvider(const MyApp()));
 
   SystemChrome.setSystemUIOverlayStyle(

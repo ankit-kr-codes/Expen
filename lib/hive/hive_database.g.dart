@@ -17,10 +17,10 @@ class AmountAdapter extends TypeAdapter<Amount> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Amount(
-      fields[0] as String,
-      fields[1] as String,
-      fields[2] as double,
-      fields[3] as String,
+      fields[0] as String? ?? '',
+      fields[1] as String? ?? '',
+      fields[2] as double? ?? 0.0,
+      fields[3] as String? ?? '',
     );
   }
 
