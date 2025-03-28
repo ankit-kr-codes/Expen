@@ -78,7 +78,7 @@ class Home extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "${currencySymbol[currencyProvider.selectedCurrencyIndex]["symbol"]}$totalAmount",
+                      "${currencySymbol[currencyProvider.selectedCurrencyIndex]["symbol"]}${totalAmount.toStringAsFixed(2)}",
                       style: TextStyle(
                         fontSize: 28,
                         color:
@@ -157,7 +157,7 @@ class Home extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Text(
-                                "${currencySymbol[currencyProvider.selectedCurrencyIndex]["symbol"]}${amount.amount.toString()}",
+                                "${currencySymbol[currencyProvider.selectedCurrencyIndex]["symbol"]}${amount.amount.toStringAsFixed(1)}",
                                 style: const TextStyle(fontSize: 14),
                               ),
                               Text(
