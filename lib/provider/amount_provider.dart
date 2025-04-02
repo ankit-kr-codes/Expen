@@ -57,13 +57,19 @@ class AmountProvider with ChangeNotifier {
     Future.delayed(Duration.zero, () => notifyListeners());
   }
 
-  //This function adds expense to the list(shows in home screen)
-  Future addAmount(String title, String subtitle, double amount) async {
+  //This function adds expense to the list(shows in home screen) //NEW - AIDAN H - TAKES NEW DATE INPUT, IF DATE SELECTED IS BEFORE CURRENT DATE THEN DO NOT DISPLAY TIME.
+  Future addAmount(String title, String subtitle, double amount, DateTime date) async {
     String formatDateTime(DateTime dateTime) {
-      return DateFormat('dd MMMM yyyy  hh:mm a').format(dateTime);
+      DateTime date1 = DateTime(dateTime.year, dateTime.month, dateTime.day);
+      DateTime date2 = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+      if(date1.isBefore(date2)){
+        return DateFormat('dd MMMM yyyy').format(dateTime);
+      }else{
+        return DateFormat('dd MMMM yyyy  hh:mm a').format(dateTime);
+      }
     }
-
-    String dateTime = formatDateTime(DateTime.now());
+    
+    String dateTime = formatDateTime(date);
 
     var newAmount = Amount(title, subtitle, amount, dateTime);
 
