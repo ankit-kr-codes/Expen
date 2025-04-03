@@ -25,15 +25,19 @@ class _AddExpenseState extends State<AddExpense> {
     borderSide: BorderSide.none,
   );
 
-  //NEW - DEV AIDAN H - 
+  //NEW - DEV AIDAN H -
   DateTime todaysDate = DateTime.now(); //PULLING THE DATETIME FOR DISPLAY
-  DateTime? selectedDate; //SETTING VAR FOR DATE SELECTOR 
+  DateTime? selectedDate; //SETTING VAR FOR DATE SELECTOR
 
   Future<void> _selectDate() async {
-    final DateTime? pickedDate = await showDatePicker(
+    DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
-      firstDate: DateTime(todaysDate.year, todaysDate.month-1, todaysDate.day),
+      firstDate: DateTime(
+        todaysDate.year,
+        todaysDate.month - 1,
+        todaysDate.day,
+      ),
       lastDate: DateTime.now(),
     );
 
@@ -66,7 +70,8 @@ class _AddExpenseState extends State<AddExpense> {
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
       ),
-      body: SingleChildScrollView( //NEW - DEV AIDAN H - MAKES THE UI SCROLLABLE TO FIX SCREEN OVERFLOW
+      body: SingleChildScrollView(
+        //NEW - DEV AIDAN H - MAKES THE UI SCROLLABLE TO FIX SCREEN OVERFLOW
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
@@ -107,7 +112,7 @@ class _AddExpenseState extends State<AddExpense> {
                 ),
               ),
               const SizedBox(height: 50),
-        
+
               //Getting title from the user
               const Align(
                 alignment: Alignment.centerLeft,
@@ -126,7 +131,7 @@ class _AddExpenseState extends State<AddExpense> {
                 ),
               ),
               const SizedBox(height: 30),
-        
+
               //Getting description from the user
               const Align(
                 alignment: Alignment.centerLeft,
@@ -149,26 +154,31 @@ class _AddExpenseState extends State<AddExpense> {
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text("Please select a custom date for this expense\nOr leave it as the default", textAlign: TextAlign.center,),
+                  const Text(
+                    "Please select a custom date for this expense\nOr leave it as the default",
+                    textAlign: TextAlign.center,
+                  ),
                   const SizedBox(height: 15),
                   Text(
                     selectedDate != null
-                      ? DateFormat('dd MMMM yyyy').format(selectedDate!)
-                      : DateFormat('dd MMMM yyyy').format(todaysDate),
+                        ? DateFormat('dd MMMM yyyy').format(selectedDate!)
+                        : DateFormat('dd MMMM yyyy').format(todaysDate),
                   ),
                   const SizedBox(height: 15),
                   ElevatedButton(
-                    onPressed: _selectDate, 
+                    onPressed: _selectDate,
                     style: ButtonStyle(
                       elevation: const WidgetStatePropertyAll(0),
-                      overlayColor: WidgetStatePropertyAll(AppColors.transparent),
+                      overlayColor: WidgetStatePropertyAll(
+                        AppColors.transparent,
+                      ),
                     ),
-                    child: const Text("Pick date/time")
+                    child: const Text("Pick Date"),
                   ),
                 ],
               ),
               const SizedBox(height: 40),
-        
+
               //Saving expense data
               ElevatedButton(
                 //This will add expense to the list(it will be shown in home screen)
@@ -178,10 +188,15 @@ class _AddExpenseState extends State<AddExpense> {
                     double? amount = double.tryParse(numController.text);
                     String title = titleController.text;
                     String subtitle = subTitleController.text;
-        
+
                     if (amount != null) {
                       selectedDate ??= todaysDate;
-                      amountProvider.addAmount(title, subtitle, amount, selectedDate!); //NEW - DEV AIDAN H - PASSING NEW DATE TO PROVIDER
+                      amountProvider.addAmount(
+                        title,
+                        subtitle,
+                        amount,
+                        selectedDate!,
+                      ); //NEW - DEV AIDAN H - PASSING NEW DATE TO PROVIDER
                       context.pop();
                       //User will go to home screen and get a dialog box to notify that expense is added
                       showDialog<String>(
