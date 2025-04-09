@@ -59,16 +59,88 @@ class _AddExpenseState extends State<AddExpense> {
         leading: GestureDetector(
           onTap: () => context.pop(),
           child: Padding(
-            padding: const EdgeInsets.only(top: 15, left: 10),
-            child: Text("Cancel", style: TextStyle(color: AppColors.blue)),
+            padding: const EdgeInsets.only(top: 6),
+            child: Icon(Icons.arrow_back_ios, color: AppColors.blue),
           ),
         ),
-        leadingWidth: 70,
+        leadingWidth: 50,
         centerTitle: true,
         title: const Text(
           "Add New Expense",
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
+        actions: [
+          //Saving expense data
+          GestureDetector(
+            onTap: () {
+              //Check if the textfield is empty or not
+              if (numController.text.isNotEmpty) {
+                double? amount = double.tryParse(numController.text);
+                String title = titleController.text;
+                String subtitle = subTitleController.text;
+
+                if (amount != null) {
+                  selectedDate ??= todaysDate;
+                  amountProvider.addAmount(
+                    title,
+                    subtitle,
+                    amount,
+                    selectedDate!,
+                  ); //NEW - DEV AIDAN H - PASSING NEW DATE TO PROVIDER
+                  context.pop();
+                  //User will go to home screen and get a dialog box to notify that expense is added
+                  showDialog<String>(
+                    context: context,
+                    builder:
+                        (BuildContext context) => AlertDialog(
+                          title: const Text('Amount added'),
+                          content: const Text(
+                            "Your expense has been added successfully!\n\nLong press to delete it.",
+                          ),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () => context.pop(),
+                              child: const Text('OK'),
+                            ),
+                          ],
+                        ),
+                  );
+                } else {
+                  //Inform user that entered amount is invalid (means it's not a double value)
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Please enter a valid amount"),
+                      showCloseIcon: true,
+                      duration: Duration(seconds: 1),
+                    ),
+                  );
+                }
+                numController.clear(); // This will clear the textfield
+                titleController.clear(); // This will clear the textfield
+              } else {
+                //If textfield is empty then user will get this snackbar
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text(
+                      "Please enter an amount. Amount cannot be empty.",
+                    ),
+                    showCloseIcon: true,
+                    duration: Duration(seconds: 1),
+                  ),
+                );
+              }
+            },
+            child: Text(
+              "Save",
+              style: TextStyle(
+                fontSize: 15,
+                color: AppColors.blue,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const SizedBox(width: 12),
+        ],
       ),
       body: SingleChildScrollView(
         //NEW - DEV AIDAN H - MAKES THE UI SCROLLABLE TO FIX SCREEN OVERFLOW
@@ -154,15 +226,16 @@ class _AddExpenseState extends State<AddExpense> {
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
-                    "Please select a custom date for this expense\nOr leave it as the default",
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 15),
+                  // const Text(
+                  //   "Please select a custom date for this expense\nOr leave it as the default",
+                  //   textAlign: TextAlign.center,
+                  // ),
+                  // const SizedBox(height: 15),
                   Text(
                     selectedDate != null
                         ? DateFormat('dd MMMM yyyy').format(selectedDate!)
                         : DateFormat('dd MMMM yyyy').format(todaysDate),
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 15),
                   ElevatedButton(
@@ -173,79 +246,11 @@ class _AddExpenseState extends State<AddExpense> {
                         AppColors.transparent,
                       ),
                     ),
-                    child: const Text("Pick Date"),
+                    child: const Text("Change Date"),
                   ),
                 ],
               ),
               const SizedBox(height: 40),
-
-              //Saving expense data
-              ElevatedButton(
-                //This will add expense to the list(it will be shown in home screen)
-                onPressed: () {
-                  //Check if the textfield is empty or not
-                  if (numController.text.isNotEmpty) {
-                    double? amount = double.tryParse(numController.text);
-                    String title = titleController.text;
-                    String subtitle = subTitleController.text;
-
-                    if (amount != null) {
-                      selectedDate ??= todaysDate;
-                      amountProvider.addAmount(
-                        title,
-                        subtitle,
-                        amount,
-                        selectedDate!,
-                      ); //NEW - DEV AIDAN H - PASSING NEW DATE TO PROVIDER
-                      context.pop();
-                      //User will go to home screen and get a dialog box to notify that expense is added
-                      showDialog<String>(
-                        context: context,
-                        builder:
-                            (BuildContext context) => AlertDialog(
-                              title: const Text('Amount added'),
-                              content: const Text(
-                                "Your expense has been added successfully!\n\nLong press to delete it.",
-                              ),
-                              actions: <Widget>[
-                                TextButton(
-                                  onPressed: () => context.pop(),
-                                  child: const Text('OK'),
-                                ),
-                              ],
-                            ),
-                      );
-                    } else {
-                      //Inform user that entered amount is invalid (means it's not a double value)
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Please enter a valid amount"),
-                          showCloseIcon: true,
-                          duration: Duration(seconds: 1),
-                        ),
-                      );
-                    }
-                    numController.clear(); // This will clear the textfield
-                    titleController.clear(); // This will clear the textfield
-                  } else {
-                    //If textfield is empty then user will get this snackbar
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text(
-                          "Please enter an amount. Amount cannot be empty.",
-                        ),
-                        showCloseIcon: true,
-                        duration: Duration(seconds: 1),
-                      ),
-                    );
-                  }
-                },
-                style: ButtonStyle(
-                  elevation: const WidgetStatePropertyAll(0),
-                  overlayColor: WidgetStatePropertyAll(AppColors.transparent),
-                ),
-                child: const Text("Save Expense"),
-              ),
             ],
           ),
         ),
